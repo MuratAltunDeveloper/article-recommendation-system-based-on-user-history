@@ -1,0 +1,491 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ilgi alanına göre makaleler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex; /* Dikey yönde flexbox */
+            overflow-y: scroll; /* Yalnızca dikey scroll bar */
+            background-color: aquamarine;
+        }
+        
+        .navbar {
+            width: 200px; /* Sol taraftaki navbar'ın genişliği */
+            height: 100vh; /* Ekran yüksekliği kadar uzunluk */
+            background-color: #f2f2f2;
+            padding-top: 20px;
+            position: fixed; /* Sabit konum */
+            left: 0; /* Sol kenara sabitleme */
+            top: 0; /* Üst kenara sabitleme */
+        }
+        
+        .navbar h2 {
+            margin-top: 0; /* Başlığın üst boşluğunu kaldır */
+            padding-left: 20px; /* Sol kenardan başlık mesafesi */
+        }
+        
+        .navbar a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #ccc; /* Her bağlantının altına bir çizgi */
+        }
+        
+        .navbar a:first-child {
+            border-top: 1px solid #ccc; /* İlk bağlantının üstüne bir çizgi */
+        }
+        
+        .search-container {
+            padding: 10px 20px;
+        }
+        
+        .search-container input[type=text] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .search-container input[type=submit] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .content {
+            flex: 0.45; /* Sol tarafın %45'ı */
+            padding: 12px; /* İçeriğin kenar boşluğu */
+            margin-top: 10px; /* Sayfanın üstünden 10 piksel boşluk bırak */
+            margin-left: 220px; /* Navbar genişliği + boşluk */
+            box-sizing: border-box; /* Padding ve border'ın width'i içeriğe dahil */
+        }
+        
+        .empty-space {
+            flex: 0.1; /* Boş alanın %10'u */
+        }
+        
+        .content2 {
+            flex: 0.45; /* Sağ tarafın %45'ı */
+            padding: 12px; /* İçeriğin kenar boşluğu */
+            margin-top: 10px; /* Sayfanın üstünden 10 piksel boşluk bırak */
+            box-sizing: border-box; /* Padding ve border'ın width'i içeriğe dahil */
+        } 
+        .clickbtn {
+            display: block; /* Görünürlük */
+            width: 20px; /* Boyut */
+            height: 20px; /* Boyut */
+            position: relative; /* Konum */
+            cursor: pointer; /* Tıklanabilirlik */
+          }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <!-- Buraya veriler eklenecek -->
+    </div>
+    <div class="content2">
+        <!-- Buraya veriler eklenecek -->
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-database.js"></script>
+<script>
+
+
+    
+    var usersifre = "{{ girensifre }}";
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!burada veri tababındakileri arayüde gösterme
+
+var firebaseConfig = {
+
+    "apiKey": "AIzaSyB5cPW2u4BlnZsyn5S8MJo4jqYom3fPOiw",
+    "authDomain": "makeleweb2.firebaseapp.com",
+    "databaseURL": "https://makeleweb2-default-rtdb.europe-west1.firebasedatabase.app",
+    "projectId": "makeleweb2",
+    "storageBucket": "makeleweb2.appspot.com",
+    "messagingSenderId": "65251424283",
+    "appId": "1:65251424283:web:16934ba965175be83760be",
+   
+
+};
+
+// Firebase'i başlatın
+firebase.initializeApp(firebaseConfig);
+
+// Realtime Database referansını alın
+var db = firebase.database();
+
+
+console.log("sifrehtml:"+usersifre)
+
+// "ilgilendiği makale" düğümündeki tüm verileri al
+db.ref('ilgilendigi_makaleye_fasttextonerisi').once('value')
+.then(function(snapshot) {
+    console.log("ilgilendigi_makaleye_fasttextonerisi içinde")
+    var tum_veriler = snapshot.val();
+
+    // Verilerin boş olup olmadığını kontrol et
+    if (!tum_veriler) {
+        console.log("Veri seti boş.");
+        return; // Fonksiyondan çık
+    }
+
+//------------------------------------------burada id kontrolü
+// Sol yarıdaki içeriği güncelle
+var contentDiv = document.querySelector('.content');
+contentDiv.innerHTML = 'FAST_TEXT ilgilendiği makaleler:'; // İçeriği temizle
+
+for (var dataset in tum_veriler) {
+var datasetVerileri = tum_veriler[dataset];
+var idDegeri = datasetVerileri.id;
+
+if(idDegeri == usersifre) {
+var veri = datasetVerileri.fasttext_ilgilendigiarticles_oneri;
+// Veriyi HTML içine ekle
+for (let i = 0; i < veri.length; i++) {
+// Abstract kısmını ayıklama
+var abstractStartIndex = veri[i].indexOf("Abstract:");
+if (abstractStartIndex !== -1) {
+    var abstract = veri[i].substring(abstractStartIndex + "Abstract:".length).trim();
+    // Her butona farklı bir id değeri ekle
+    
+var buttonId = "button" + (i+1);
+    contentDiv.innerHTML += '<p>' + abstract + '</p>'+'  <button class="clickbtn" id="' + buttonId + '">x</button>';
+}
+}
+}
+}
+
+//güncelleme fasttext bitis
+
+}
+
+
+
+
+
+
+)
+.catch(function(error) {
+    console.error("Veri alınamadı:", error);
+});
+
+
+
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!111
+//burası scibert baslangic onerileri 
+
+
+// "baslangic_oneri" düğümündeki tüm verileri al
+db.ref('ilgilendigi_makaleye_scibertonerisi').once('value')
+.then(function(snapshot) {
+console.log("ilgilendigi_makaleye_scibertonerisi scibert içinde")
+var tum_veriler2 = snapshot.val();
+
+// Verilerin boş olup olmadığını kontrol et
+if (!tum_veriler2) {
+console.log("Veri seti boş.");
+return; // Fonksiyondan çık
+}
+
+
+
+//------------------------------------------burada id kontrolü
+// Sol yarıdaki içeriği güncelle
+var contentDiv2 = document.querySelector('.content2');
+contentDiv2.innerHTML = 'SCİBERT ilgilendiği makalelere göre:'; // İçeriği temizle
+
+for (var dataset in tum_veriler2) {
+var datasetVerileri2 = tum_veriler2[dataset];
+var idDegeri2 = datasetVerileri2.id;
+
+if(idDegeri2 == usersifre) {
+var veri2 = datasetVerileri2.scibert_ilgilendigiarticles_oneri;
+// Veriyi HTML içine ekle
+for (let i = 0; i < veri2.length; i++) {
+// Abstract kısmını ayıklama
+var abstractStartIndex = veri2[i].indexOf("Abstract:");
+if (abstractStartIndex !== -1) {
+var abstract2 = veri2[i].substring(abstractStartIndex + "Abstract:".length).trim();
+     // Her butona farklı bir id değeri ekle
+var buttonId2 = "button" + (i+6);
+
+contentDiv2.innerHTML += '<p>' + abstract2 + '</p>'+'  <button class="clickbtn" id="' + buttonId2 + '">x</button>';
+}
+}
+}
+}
+
+//güncelleme fasttext bitis
+
+})
+.catch(function(error) {
+console.error("Veri alınamadı:", error);
+});
+
+
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1***********************Butona tıklama ve  ilgi alan makaleye ekleme
+var butonno=0;
+document.addEventListener("click", function(event) {
+    if (event.target.classList.contains("clickbtn")) {
+       console.log("click clickbtn")
+     
+       handleClick(event);
+       
+    }
+});
+function handleClick(event) {
+    // Tıklanan düğmenin ID'sini al
+    const buttonId = event.target.id;
+    console.log("Tıklanan düğme ID'si:", buttonId);
+    // Buton numarasını almak için "button" kısmını kaldır
+    const buttonNumber = buttonId.replace("button", "");
+    butonno=parseInt(buttonNumber);
+    console.log("Buton numarası:", butonno);
+////////////////////////////////////////burada buton ve veritabanları işlemleri
+
+//butonno makaleyi veritabanına atma
+
+if(butonno>5)
+{
+    console.log("scibert")
+//scibert
+
+
+db.ref('ilgilendigi_makaleye_scibertonerisi').once('value')
+    .then(function(snapshot) {
+        console.log("ilgilendigi_makaleye_scibertonerisi scibert içinde benimle ilgili olan makaleyi alma")
+        var tum_veriler2 = snapshot.val();
+
+        // Verilerin boş olup olmadığını kontrol et
+        if (!tum_veriler2) {
+            console.log("Veri seti boş.");
+            return; // Fonksiyondan çık
+        }
+
+        for (var dataset in tum_veriler2) {
+            var datasetVerileri2 = tum_veriler2[dataset];
+            var idDegeri2 = datasetVerileri2.id;
+            
+            if(idDegeri2 == usersifre) {
+            var veri2 = datasetVerileri2.scibert_ilgilendigiarticles_oneri;
+            // Veriyi alma ve firebase kaydetme
+            var ilgiliarticle="";
+           if(butonno==6)
+           {
+          ilgiliarticle=veri2[0]
+           }
+            if(butonno==7)
+           {
+             ilgiliarticle=veri2[1]
+           }
+           if(butonno==8)
+           {
+             ilgiliarticle=veri2[2]
+           }
+            if(butonno==9)
+           { ilgiliarticle=veri2[3]
+            
+           }
+            if(butonno==10)
+           { ilgiliarticle=veri2[4]
+            
+           }
+    
+               console.log("usersifre:",usersifre)
+              //firebase id=12 olan mesela  bu makaleyi at
+              console.log("ilgili article:", ilgiliarticle);
+
+
+// Yeni dalı eklemek için referans belirleme
+var yeniDalRef = db.ref('ilgilimakale/' + usersifre);
+
+// Düğüm zaten varsa altına ilgili makaleyi ekler, yoksa düğümü oluşturup altına ilgili makaleyi ekler
+yeniDalRef.transaction(function(currentData) {
+    if (!currentData) {
+        currentData = {}; // Düğüm yoksa boş bir nesne oluştur
+     }
+
+    // abstract_scibert özelliği zaten varsa ve içinde veri bulunmuyorsa, yeni veri eklenir
+if (!currentData["abstract_scibert"]) {
+    currentData["abstract_scibert"] = [];
+}
+    var lastIndex = currentData["abstract_scibert"].length; // Son indis numarasını al
+    currentData["abstract_scibert"][lastIndex] = ilgiliarticle; // Abstract anahtarına ilgili makaleyi ekle
+
+    return currentData;
+});
+
+
+
+
+
+
+
+
+
+            }
+            }
+
+
+
+
+
+
+
+    })
+    .catch(function(error) {
+        console.error("Veri alınamadı:", error);
+    });
+
+
+
+
+}
+else if(butonno<=5)
+{
+    console.log("fasttext")
+//fasttext
+db.ref('ilgilendigi_makaleye_fasttextonerisi').once('value')
+    .then(function(snapshot) {
+        console.log("ilgilendigi_makaleye_fasttextonerisi fasttext içinde benimle ilgili olan makaleyi alma")
+        var tum_veriler = snapshot.val();
+
+        // Verilerin boş olup olmadığını kontrol et
+        if (!tum_veriler) {
+            console.log("Veri seti boş.");
+            return; // Fonksiyondan çık
+        }
+
+        for (var dataset in tum_veriler) {
+            var datasetVerileri = tum_veriler[dataset];
+            var idDegeri = datasetVerileri.id;
+            
+            if(idDegeri == usersifre) {
+            var veri = datasetVerileri.fasttext_ilgilendigiarticles_oneri;
+            // Veriyi alma ve firebase kaydetme
+            var ilgiliarticle="";
+           if(butonno==1)
+           {
+          ilgiliarticle=veri[0]
+           }
+            if(butonno==2)
+           {
+             ilgiliarticle=veri[1]
+           }
+           if(butonno==3)
+           {
+             ilgiliarticle=veri[2]
+           }
+            if(butonno==4)
+           { ilgiliarticle=veri[3]
+            
+           }
+            if(butonno==5)
+           { ilgiliarticle=veri[4]
+            
+           }
+    
+           console.log("usersifre:",usersifre)
+              //firebase id=12 olan mesela  bu makaleyi at
+              console.log("ilgili article:", ilgiliarticle);
+
+// Yeni dalı eklemek için referans belirleme
+var yeniDalRef = db.ref('ilgilimakale/' + usersifre);
+
+// Düğüm zaten varsa altına ilgili makaleyi ekler, yoksa düğümü oluşturup altına ilgili makaleyi ekler
+yeniDalRef.transaction(function(currentData) {
+    if (!currentData) {
+        currentData = {}; // Düğüm yoksa boş bir nesne oluştur
+       }
+// abstract_fasttext özelliği zaten varsa ve içinde veri bulunmuyorsa, yeni veri eklenir
+if (!currentData["abstract_fasttext"]) {
+    currentData["abstract_fasttext"] = [];
+}
+    var lastIndex = currentData["abstract_fasttext"].length; // Son indis numarasını al
+    currentData["abstract_fasttext"][lastIndex] = ilgiliarticle; // Abstract anahtarına ilgili makaleyi ekle
+
+    return currentData;
+});
+
+
+
+
+
+
+
+
+
+            }
+            }
+
+
+
+
+
+
+
+    })
+    .catch(function(error) {
+        console.error("Veri alınamadı:", error);
+    });
+
+
+}
+
+
+
+//ilgilendiği makaleyi veri tabanına atma
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

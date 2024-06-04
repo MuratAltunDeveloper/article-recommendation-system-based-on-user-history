@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kullanıcı Kayıt Formu</title>
+  
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: aquamarine;
+        }
+
+        .container {
+            width: 500px;
+            margin: 0 auto;
+            border: 1px solid rgb(77, 106, 77);
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Kayıt Ol</h2>
+
+        <form id="kayitFormu">
+            <label for="isim">Ad Soyad:</label>
+            <input type="text" id="isim" name="isim" required>
+
+            <label for="sifre">Şifre:</label>
+            <input type="password" id="sifre" name="sifre" required>
+
+            <label for="dogumTarihi">Doğum Tarihi:</label>
+            <input type="date" id="dogumTarihi" name="dogumTarihi" required>
+
+            <label for="cinsiyet">Cinsiyet:</label>
+            <select id="cinsiyet" name="cinsiyet" required>
+                <option value="Erkek">Erkek</option>
+                <option value="Kadın">Kadın</option>
+                <option value="Diğer">Diğer</option>
+            </select>
+
+            <label for="ilgiAlanlari">Akademik İlgi Alanları:</label>
+<select id="ilgiAlanlari" name="ilgiAlanlari" multiple required>
+    <option value="technology">Technology</option>
+    <option value="software">Software</option>
+    <option value="IP">IP</option>
+    <option value="security">Security</option>
+    <option value="model">Model</option>
+    <option value="web">Web</option>
+    
+</select>
+
+
+            <button type="submit">Kayıt Ol</button>
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-database.js"></script>
+    <script src="{% static 'js/kayitolma.js' %}"></script>
+       
+</body>
+</html>

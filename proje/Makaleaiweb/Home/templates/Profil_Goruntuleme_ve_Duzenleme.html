@@ -1,0 +1,404 @@
+<!--
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Ekranı</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .profile-pic {
+            height: 200px;
+            width: 200px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 50%;
+            margin-top: 10px;
+        }
+        .profile-info {
+            margin: 20px;
+        }
+        .profile-info input,
+        .profile-info select,
+        .profile-info textarea {
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+        }
+        .profile-info button {
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center">Profil Bilgileri</h2>
+    <form id="profile-form">
+        <div class="profile-info">
+            <input type="text" id="name" name="name" placeholder="Ad" value="">
+            <input type="date" id="birthdate" name="birthdate" value="1000-01-01">
+            <select id="gender" name="gender">
+                <option value="">Cinsiyet Seçin</option>
+                <option value="male">Erkek</option>
+                <option value="female">Kadın</option>
+            </select>
+            <input type="password" id="password" name="password" placeholder="Şifre" required>
+            <label for="ilgiAlanlari">Akademik İlgi Alanları:</label>
+            <select id="ilgiAlanlari" name="ilgiAlanlari" multiple required>
+                <option value="Bilgisayar Bilimleri">Bilgisayar Bilimleri</option>
+                <option value="Mühendislik">Mühendislik</option>
+                <option value="Matematik">Matematik</option>
+                <option value="Fizik">Fizik</option>
+                <option value="Kimya">Kimya</option>
+                <option value="Biyoloji">Biyoloji</option>
+                <option value="Tarih">Tarih</option>
+                <option value="Felsefe">Felsefe</option>
+                <option value="Sanat">Sanat</option>
+                <option value="Edebiyat">Edebiyat</option>
+            </select>
+            <div class="profile-info">
+                <button type="button" onclick="updateProfile()">Güncelle</button>
+            </div>
+        </div>
+    </form>
+
+  
+    <script>
+
+// Firebase yapılandırma bilgilerini buraya ekleyin
+var firebaseConfig = {
+
+    "apiKey": "AIzaSyCVwLgD-iJIkIqIRgOwbxBmx5vxKXsZP40",
+    "authDomain": "makaleweb-a7bcf.firebaseapp.com",
+    "databaseURL": "https://makaleweb-a7bcf-default-rtdb.europe-west1.firebasedatabase.app",
+    "projectId": "makaleweb-a7bcf",
+    "storageBucket": "makaleweb-a7bcf.appspot.com",
+    "messagingSenderId": "156500986394",
+    "appId": "1:156500986394:web:87b28a50afcdfb3815dfa3",
+
+
+};
+
+// Firebase'i başlatın
+firebase.initializeApp(firebaseConfig);
+
+// Realtime Database referansını alın
+var db = firebase.database();
+
+        function updateProfile() {
+            var formData = new FormData(document.getElementById("profile-form"));
+            var jsonData = {};
+        
+            // FormData'dan diğer alanları jsonDataya ekle
+            formData.forEach(function(value, key) {
+                jsonData[key] = value;
+            });
+        
+            // Seçili ilgi alanlarını al
+            var selectedIlgiAlanlari = [];
+            var ilgiAlanlariSelect = document.getElementById("ilgiAlanlari");
+            for (var i = 0; i < ilgiAlanlariSelect.options.length; i++) {
+                var option = ilgiAlanlariSelect.options[i];
+                if (option.selected) {
+                    selectedIlgiAlanlari.push(option.value);
+                }
+            }
+        
+            // Seçili ilgi alanlarını jsonData'ya ekle
+            jsonData["ilgiAlanlari"] = selectedIlgiAlanlari;
+        
+            // Şimdi jsonData nesnesini usersupdate.js dosyasına gönderebilirsiniz
+            console.log(jsonData);
+            // usersupdate.js dosyasına gönderme işlemi burada gerçekleştirilecek
+
+            //----------------BURADA FİREBASE BU KİŞİYİ GÜNCELLEME
+        }
+        
+        
+
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+-->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Ekranı</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: aquamarine;
+        }
+        .profile-pic {
+            height: 200px;
+            width: 200px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 50%;
+            margin-top: 10px;
+        }
+        .profile-info {
+            margin: 20px;
+        }
+        .profile-info input,
+        .profile-info select,
+        .profile-info textarea {
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+        }
+        .profile-info button {
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center">Profil Bilgileri</h2>
+    <form id="profile-form">
+        <div class="profile-info">
+            <input type="text" id="name" name="name" placeholder="Ad" value="">
+            <input type="date" id="birthdate" name="birthdate" value="1000-01-01">
+            <select id="gender" name="gender">
+                <option value="">Cinsiyet Seçin</option>
+                <option value="male">Erkek</option>
+                <option value="female">Kadın</option>
+            </select>
+            <input type="password" id="password" name="password" placeholder="Şifre" required>
+            <label for="ilgiAlanlari">Akademik İlgi Alanları:</label>
+            <select id="ilgiAlanlari" name="ilgiAlanlari" multiple required>
+                <option value="technology">Technology</option>
+                <option value="software">Software</option>
+                <option value="IP">IP</option>
+                <option value="security">Security</option>
+                <option value="model">Model</option>
+                <option value="web">Web</option>
+                
+            </select>
+
+
+
+            
+
+
+            <div class="profile-info">
+                <button type="button" onclick="updateProfile()">Güncelle</button>
+            </div>
+        </div>
+    </form>
+
+    
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-database.js"></script>
+ 
+    <script>
+          //firebase işlemleri
+                       // Firebase yapılandırma bilgilerini buraya ekleyin
+                       var firebaseConfig = {
+
+  "apiKey": "AIzaSyB5cPW2u4BlnZsyn5S8MJo4jqYom3fPOiw",
+  "authDomain": "makeleweb2.firebaseapp.com",
+  "databaseURL": "https://makeleweb2-default-rtdb.europe-west1.firebasedatabase.app",
+  "projectId": "makeleweb2",
+  "storageBucket": "makeleweb2.appspot.com",
+  "messagingSenderId": "65251424283",
+  "appId": "1:65251424283:web:16934ba965175be83760be",
+ 
+                    
+                    };
+                    
+                    // Firebase'i başlatın
+                    firebase.initializeApp(firebaseConfig);
+                    
+                    // Realtime Database referansını alın
+                    var db = firebase.database();
+                    
+                    
+// Sayfa yüklendiğinde otomatik olarak çalışacak başlangıç fonksiyonu
+window.onload = function() {
+
+
+            //giriş yapanın şifresi
+            var update_make_sifre = "{{ girensifre }}"; // context içindeki sifrehtml değişkenine erişim
+            console.log("GÜNCELLENECEK Şifre: " + update_make_sifre);
+            
+            
+
+
+// `equalTo()` kullanarak şifreye göre filtreleme
+var kullaniciRef = db.ref('kullanicilar').orderByChild('sifre').equalTo(update_make_sifre);
+
+kullaniciRef.once('value', function(snapshot) {
+    if (snapshot.exists()) {
+        snapshot.forEach(function(childSnapshot) {
+            var kullaniciVerisi = childSnapshot.val();
+            if ('sifre' in kullaniciVerisi) {
+                
+                console.log("Kullanıcı mevcut Firebase datası");
+                console.log(kullaniciVerisi);
+                // Burada sifre anahtarına sahip olan kullanıcı verisinin işlemlerini yapabilirsiniz
+                 //forma firebasedeki verileri atama
+                  // Firebase verilerini forma doldurma
+                document.getElementById("name").value = kullaniciVerisi.isim;
+                document.getElementById("birthdate").value = kullaniciVerisi.dogumTarihi;
+                document.getElementById("gender").value = kullaniciVerisi.cinsiyet;
+                
+                // Akademik ilgi alanları seçimini işaretleme
+                var ilgiAlanlariSelect = document.getElementById("ilgiAlanlari");
+                var ilgiAlanlari = kullaniciVerisi.ilgiAlanlari;
+                for (var i = 0; i < ilgiAlanlariSelect.options.length; i++) {
+                    var option = ilgiAlanlariSelect.options[i];
+                    if (ilgiAlanlari.includes(option.value)) {
+                        option.selected = true;
+                    }
+                }
+                document.getElementById("password").value = update_make_sifre;
+
+
+
+
+            } else {
+                console.log("Kullanıcı verisinde 'sifre' anahtarı bulunamadı.");
+            }
+        });
+    } else {
+        console.log("Şifre değeri girilen kullanıcı bulunamadı.");
+    }
+});
+
+}
+
+
+        function updateProfile() {
+
+
+
+
+  var formData = new FormData(document.getElementById("profile-form"));
+            var jsonData = {};
+        
+            // FormData'dan diğer alanları jsonDataya ekle
+            formData.forEach(function(value, key) {
+                jsonData[key] = value;
+            });
+        
+            // Seçili ilgi alanlarını al
+            var selectedIlgiAlanlari = [];
+            var ilgiAlanlariSelect = document.getElementById("ilgiAlanlari");
+            for (var i = 0; i < ilgiAlanlariSelect.options.length; i++) {
+                var option = ilgiAlanlariSelect.options[i];
+                if (option.selected) {
+                    selectedIlgiAlanlari.push(option.value);
+                }
+            }
+        
+            // Seçili ilgi alanlarını jsonData'ya ekle
+            jsonData["ilgiAlanlari"] = selectedIlgiAlanlari;
+        
+            // Şimdi jsonData nesnesini usersupdate.js dosyasına gönderebilirsiniz
+            console.log("Forumdan gelen");
+            console.log(jsonData)
+            // usersupdate.js dosyasına gönderme işlemi burada gerçekleştirilecek
+
+            //----------------BURADA FİREBASE BU KİŞİYİ GÜNCELLEME
+      
+      //giriş yapanın şifresi
+      var update_make_sifre = "{{ girensifre }}"; // context içindeki sifrehtml değişkenine erişim
+      console.log("GÜNCELLENECEK Şifre: " + update_make_sifre);
+      
+      
+
+
+// `equalTo()` kullanarak şifreye göre filtreleme
+var kullaniciRef = db.ref('kullanicilar').orderByChild('sifre').equalTo(update_make_sifre);
+
+kullaniciRef.once('value', function(snapshot) {
+    if (snapshot.exists()) {
+        snapshot.forEach(function(childSnapshot) {
+            var kullaniciVerisi = childSnapshot.val();
+            if ('sifre' in kullaniciVerisi) {
+                // Burada sifre anahtarına sahip olan kullanıcı verisinin işlemlerini yapabilirsiniz
+                console.log("VERİTABANINI GÜNCELLEME")
+
+                // Verileri güncelleyin
+                childSnapshot.ref.update({
+                    cinsiyet: jsonData.gender,
+                    dogumTarihi: jsonData.birthdate,
+                    ilgiAlanlari:jsonData.ilgiAlanlari,
+                    isim: jsonData.name,
+                    sifre:jsonData.password,
+                    
+                    
+                });
+
+            } else {
+                console.log("Kullanıcı verisinde 'sifre' anahtarı bulunamadı.");
+            }
+        });
+    } else {
+        console.log("Şifre değeri girilen kullanıcı bulunamadı.");
+    }
+});
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+        }
+        
+        
+//**********************ilk basta kayıtlı kisinin verileri gözüksün
+
+
+
+
+
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
